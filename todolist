@@ -1,0 +1,162 @@
+TODOLIST - ANALISI E PROPOSTA IMPLEMENTATIVA
+STACK TECNOLOGICO DEFINITIVO
+Frontend: Angular
+Backend: Flask (Python)
+Database: SQLite
+ARCHITETTURA APPLICAZIONE
+Struttura Frontend (Angular)
+Componenti principali:
+
+AppComponent - container principale
+TaskListComponent - visualizzazione lista task
+TaskItemComponent - singolo task
+TaskFormComponent - form creazione/modifica
+FilterBarComponent - barra filtri e ricerca
+CategoryManagerComponent - gestione categorie
+Servizi:
+
+TaskService - comunicazione API per task
+CategoryService - gestione categorie
+AuthService - autenticazione (fase 2)
+Routing:
+
+/tasks - lista completa
+/tasks/new - nuovo task
+/tasks/:id/edit - modifica task
+/categories - gestione categorie
+State Management:
+
+Utilizzare servizi con RxJS Observables
+Oppure NgRx se prevedi crescita complessa
+Struttura Backend (Flask)
+Organizzazione cartelle:
+
+
+Riduci
+Salva
+Copia
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+backend/
+├── app.py (entry point)
+├── config.py
+├── models.py (definizioni tabelle SQLite)
+├── routes/
+│   ├── tasks.py
+│   ├── categories.py
+│   └── auth.py
+├── database.db (SQLite)
+└── requirements.txt
+API Endpoints:
+
+Tasks:
+
+GET /api/tasks - lista tutti i task
+GET /api/tasks/:id - dettaglio singolo
+POST /api/tasks - crea nuovo
+PUT /api/tasks/:id - aggiorna
+DELETE /api/tasks/:id - elimina
+PATCH /api/tasks/:id/toggle - toggle completamento
+Categories:
+
+GET /api/categories - lista categorie
+POST /api/categories - crea categoria
+PUT /api/categories/:id - modifica
+DELETE /api/categories/:id - elimina
+Filtri/Query parameters:
+
+?status=completed|pending
+?priority=high|medium|low
+?category_id=X
+?search=testo
+Database SQLite
+Tabelle principali:
+
+tasks
+
+id (INTEGER PRIMARY KEY)
+title (TEXT NOT NULL)
+description (TEXT)
+created_at (DATETIME)
+due_date (DATETIME)
+priority (TEXT) - 'high'/'medium'/'low'
+status (TEXT) - 'pending'/'completed'
+category_id (INTEGER FOREIGN KEY)
+categories
+
+id (INTEGER PRIMARY KEY)
+name (TEXT NOT NULL)
+color (TEXT) - codice esadecimale
+created_at (DATETIME)
+users (per fase 2)
+
+id (INTEGER PRIMARY KEY)
+email (TEXT UNIQUE)
+password_hash (TEXT)
+name (TEXT)
+FLUSSO DI LAVORO
+Scenario: Creazione Task
+User compila form in Angular
+TaskFormComponent raccoglie dati
+TaskService invia POST a Flask /api/tasks
+Flask valida dati e inserisce in SQLite
+Flask restituisce task creato (JSON)
+Angular aggiorna lista visualizzata
+Scenario: Filtro Task
+User seleziona filtro (es. "Alta priorità")
+FilterBarComponent emette evento
+TaskListComponent chiama TaskService.getTasks({priority: 'high'})
+Flask esegue query SQLite con WHERE
+Restituisce risultati filtrati
+Angular renderizza lista filtrata
+SETUP E DEPLOYMENT
+Sviluppo Locale
+Angular: ng serve su porta 4200
+Flask: eseguire su porta 5000
+Configurare CORS in Flask per accettare richieste da localhost:4200
+SQLite database si auto-crea al primo avvio
+Librerie Python chiave
+Flask
+Flask-CORS
+SQLAlchemy (ORM per gestire SQLite)
+Flask-Migrate (migrazioni database)
+Librerie Angular
+HttpClient (già incluso)
+Angular Material o PrimeNG per UI
+RxJS per gestione asincrona
+PIANO DI SVILUPPO
+Sprint 1 (MVP):
+
+Setup progetti Angular e Flask
+Database SQLite con tabella tasks
+CRUD completo task
+UI base lista e form
+Sprint 2:
+
+Implementare categorie
+Filtri e ricerca
+Migliorare UI/UX
+Sprint 3:
+
+Sistema autenticazione
+Task per utente
+Gestione errori completa
+Sprint 4:
+
+Validazioni avanzate
+Date picker e reminder
+Export/Import dati
+NOTE TECNICHE
+Usare SQLAlchemy ORM invece di query SQL raw per maggiore manutenibilità
+Implementare validazione sia lato Angular che Flask
+Gestire timezone correttamente per le date
+SQLite è monoutente: adatto per sviluppo/uso personale, valutare PostgreSQL per produzione multi-utente
+Implementare paginazione se prevedi molti task
